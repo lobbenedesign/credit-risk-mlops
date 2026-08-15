@@ -1,0 +1,10 @@
+services:
+  creditrisk:
+    build: .
+    ports:
+      - "8002:8002"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
