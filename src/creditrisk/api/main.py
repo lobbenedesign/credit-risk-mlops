@@ -1,5 +1,6 @@
 """FastAPI service exposing the credit scoring pipeline over HTTP.
 
+`GET /` — analyst console (static HTML/JS, no build step).
 `GET /healthz` — liveness plus which model version is in production.
 `POST /score` — score one application, returns decision + reason codes;
   every call is recorded in the Art. 12 inference log before it returns.
@@ -14,9 +15,11 @@ from __future__ import annotations
 
 import logging
 from datetime import UTC, date, datetime
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from creditrisk.audit.inference_log import InferenceLog
@@ -31,6 +34,14 @@ from creditrisk.registry.model_registry import ModelRegistry, ModelStage
 logger = logging.getLogger("creditrisk")
 
 app = FastAPI(title="Credit Risk MLOps", version="0.1.0")
+
+_STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def console() -> FileResponse:
+    return FileResponse(_STATIC_DIR / "index.html")
 
 
 @app.exception_handler(Exception)

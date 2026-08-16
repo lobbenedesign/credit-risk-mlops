@@ -76,7 +76,7 @@ out-of-time 75/25):
 | Demographic parity difference (scorecard) | **9,99%** (gruppo A approvato all'80,3%, gruppo B al 70,4%) |
 | Equal opportunity difference (scorecard) | **4,35%** (fra i non-default reali, TPR 94,0% vs 89,7%) |
 | Copertura test | **99%** |
-| Test totali | 65, tutti verdi |
+| Test totali | 67, tutti verdi |
 
 **Il gap di fairness è un risultato di un esperimento controllato, non un
 numero scelto a caso.** Il generatore sintetico (`docs/adr/0003`) rende il
@@ -92,6 +92,20 @@ attraverso `credit_history_score`, la feature che quel bias porta con sé.
 Questo è esattamente il fenomeno di *proxy discrimination* che un fairness
 audit deve saper catturare, e questo repository lo cattura con un numero,
 non con un'affermazione.
+
+## Console analista (interfaccia)
+
+`make serve` espone anche una console a `http://localhost:8004/` (HTML/JS
+statico, nessuna build): un **simulatore di scoring interattivo** che
+mostra probabilità di default, decisione e reason code con barre positive
+in rosso/negative in verde (il tipo di spiegazione grafica che strumenti
+come Upstart o Zest AI offrono e che raramente compare in un progetto
+pubblico); il confronto di equità fra gruppi con i gap di parità
+demografica e pari opportunità in evidenza; un modulo per l'override umano
+Art. 14 con motivazione obbligatoria; e il dossier tecnico Art. 11
+rigenerabile con un clic. Una modale al primo accesso spiega cosa fa la
+console e perché esiste, persistita in `localStorage`. Tema chiaro/scuro
+con palette dedicata (viola/indaco, non il blu generico).
 
 ## Come si esegue
 
@@ -142,6 +156,7 @@ Oppure via Docker: `docker compose up --build`.
 - [`ADR-0002`](docs/adr/0002-native-reason-codes-not-shap-on-blackbox.md) — reason code nativi dallo scorecard, non SHAP sul black-box
 - [`ADR-0003`](docs/adr/0003-synthetic-proxy-bias-by-design.md) — il dataset sintetico inietta un bias di proxy reale, non un caso di giocattolo
 - [`ADR-0004`](docs/adr/0004-lightweight-staged-registry-not-mlflow.md) — registro modelli a stadi leggero, non un server MLflow
+- [`ADR-0005`](docs/adr/0005-no-redis-no-blockchain.md) — perché Redis e blockchain non servono qui
 
 ## Nel contesto del portfolio
 

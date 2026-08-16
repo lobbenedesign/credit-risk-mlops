@@ -111,3 +111,15 @@ class TestDossierEndpoint:
         assert response.status_code == 200
         for section in ("## Dataset", "## Performance", "## Fairness", "## Limiti noti"):
             assert section in response.text
+
+
+class TestConsole:
+    def test_serves_the_analyst_console_html(self):
+        response = client.get("/")
+        assert response.status_code == 200
+        assert "text/html" in response.headers["content-type"]
+        assert "Credit Risk MLOps" in response.text
+
+    def test_serves_static_assets(self):
+        response = client.get("/static/app.js")
+        assert response.status_code == 200

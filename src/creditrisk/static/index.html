@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Console — Credit Risk MLOps</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="onboarding-backdrop" class="onboarding-backdrop" role="dialog" aria-modal="true" hidden>
+    <div class="onboarding-modal">
+      <span class="onboarding-kicker">Progetto di approfondimento personale</span>
+      <h2>A cosa serve questa console</h2>
+      <p>
+        Un modello di credit scoring che funziona bene in aggregato può comunque
+        essere ingiusto verso un gruppo specifico, e l'AI Act impone di dimostrarlo —
+        non di dichiararlo. Questa console mette insieme lo scoring interattivo, il
+        confronto di equità fra gruppi e l'audit trail delle decisioni in un'unica
+        vista, così le tre cose si possono controllare insieme, non in tre report separati.
+      </p>
+      <h3>Come si usa</h3>
+      <ul>
+        <li><strong>Simulatore</strong> — compila una domanda di credito e vedi subito probabilità di default, decisione e reason code (i motivi, con peso, dietro ogni decisione).</li>
+        <li><strong>Equità fra gruppi</strong> — tasso di approvazione e vero-positivo per gruppo protetto, con il gap di parità demografica in evidenza.</li>
+        <li><strong>Dossier tecnico</strong> — il documento Art. 11 rigenerato dal training reale, non scritto a mano.</li>
+      </ul>
+      <h3>Perché l'ho costruita</h3>
+      <p>
+        Leggendo articoli online sul mercato bancario mi sono chiesto come potrebbero
+        essere organizzati davvero software e servizi per rispondere a esigenze
+        bancarie concrete — in questo caso, come rendere visibile e verificabile un
+        bias di modello invece di lasciarlo scritto in una metrica che nessuno guarda.
+        Questo repository è il tentativo di costruirlo per intero, modello e
+        interfaccia, non solo descriverlo.
+      </p>
+      <button id="onboarding-dismiss" class="onboarding-dismiss" autofocus>Ho capito, apri la console</button>
+    </div>
+  </div>
+
+  <div class="console">
+    <header>
+      <div class="header-row">
+        <div>
+          <h1>Console — credit scoring interpretabile</h1>
+          <p class="subtitle">Simulatore di scoring con reason code, equità fra gruppi, audit trail Art. 14, dossier tecnico Art. 11.</p>
+        </div>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Cambia tema" title="Cambia tema">☀︎</button>
+      </div>
+      <div id="stat-strip" class="stat-strip"></div>
+    </header>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-header"><h2>Simulatore di scoring</h2></div>
+        <form id="score-form" class="mini-form">
+          <label>ID gruppo protetto (solo monitoraggio, mai una feature del modello)
+            <select name="protected_group">
+              <option value="group_a">group_a</option>
+              <option value="group_b">group_b</option>
+            </select>
+          </label>
+          <div class="form-row">
+            <label>Età <input type="number" name="age" value="35" min="18" /></label>
+            <label>Reddito mensile (EUR) <input type="number" name="income_monthly" value="2200" min="0" /></label>
+          </div>
+          <div class="form-row">
+            <label>Anni di impiego <input type="number" name="employment_years" value="5" min="0" step="0.5" /></label>
+            <label>Rapporto debito/reddito <input type="number" name="existing_debt_ratio" value="0.3" min="0" max="1" step="0.01" /></label>
+          </div>
+          <div class="form-row">
+            <label>Punteggio storico creditizio <input type="number" name="credit_history_score" value="650" min="0" max="850" /></label>
+            <label>Importo richiesto (EUR) <input type="number" name="loan_amount_requested" value="15000" min="0" /></label>
+          </div>
+          <button type="submit">Valuta domanda</button>
+        </form>
+        <div id="score-result" class="result-box"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Reason code (spiegazione)</h2></div>
+        <div id="reason-codes" class="reason-codes"><p class="muted">Valuta una domanda per vedere i motivi della decisione.</p></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Equità fra gruppi protetti</h2></div>
+        <div id="fairness-summary" class="muted" style="margin-bottom:10px"></div>
+        <div id="fairness-list" class="fairness-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Override umano (Art. 14)</h2></div>
+        <form id="override-form" class="mini-form">
+          <label>ID decisione <input type="text" name="decision_id" placeholder="incolla un decision_id dal simulatore" required /></label>
+          <label>Decisione corretta
+            <select name="overridden_decision">
+              <option value="approve">approve</option>
+              <option value="deny">deny</option>
+            </select>
+          </label>
+          <label>Motivazione (obbligatoria) <input type="text" name="reason" placeholder="es. documentazione aggiuntiva verificata" required /></label>
+          <label>Revisore <input type="text" name="overridden_by" value="analista-1" required /></label>
+          <button type="submit">Applica override</button>
+        </form>
+        <div id="override-result" class="result-box"></div>
+      </section>
+
+      <section class="panel panel-wide">
+        <div class="panel-header">
+          <h2>Dossier tecnico (Art. 11)</h2>
+          <button id="refresh-dossier" class="ghost-button">Rigenera</button>
+        </div>
+        <pre id="dossier" class="dossier">Caricamento...</pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
