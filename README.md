@@ -10,6 +10,26 @@ un bias di proxy realistico — **misurato, non assunto**.
 [![Python](https://img.shields.io/badge/python-3.11-blue)]()
 [![Coverage](https://img.shields.io/badge/coverage-99%25-green)]()
 
+## In breve
+
+Leggendo articoli online sul mercato bancario mi sono chiesto come potrebbe essere
+organizzato davvero un modello di credit scoring che non solo funziona bene in aggregato,
+ma può dimostrare — non solo dichiarare — di non essere ingiusto verso un gruppo
+specifico, come richiede l'AI Act europeo. Questo repository è la mia risposta: uno
+scorecard interpretabile che spiega ogni decisione con motivi pesati, un report di equità
+fra gruppi con un bias reale iniettato e misurato (non un caso di giocattolo), e un audit
+trail completo di ogni inferenza e ogni override umano.
+
+**A cosa può servire**: è un esempio concreto di come costruire compliance AI Act come
+codice invece che come documento a parte — utile per chi vuole vedere reason code,
+fairness report e override umano implementati e testati, non solo elencati in una policy.
+
+![Onboarding della console](docs/screenshots/onboarding.png)
+
+![Simulatore di scoring con reason code ed equità fra gruppi dal vivo](docs/screenshots/console-in-use.png)
+
+---
+
 ## Problema
 
 Il credit scoring è un sistema *high-risk* secondo l'Annex III dell'AI Act,
@@ -160,7 +180,7 @@ Oppure via Docker: `docker compose up --build`.
 
 ## Nel contesto del portfolio
 
-Quarto repository di [`banca-sandbox`](../BANKING-PORTFOLIO/ROADMAP.md): il
+Quarto repository di [`banca-sandbox`](https://github.com/lobbenedesign/banca-sandbox): il
 progetto AI Act della roadmap originale, ora costruito con lo stesso
 standard maturato negli altri tre — numeri misurati non aggettivi, ADR che
 documentano il processo oltre al risultato, `make demo` come unico comando
