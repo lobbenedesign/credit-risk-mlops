@@ -58,7 +58,10 @@ def main() -> None:
         report = compute_fairness_report(name, result.split.test_df, probs, threshold=DECISION_THRESHOLD)
         print(f"\n  {name}:")
         for g in report.groups:
-            print(f"    gruppo {g.group}: n={g.n:4d}  approval_rate={g.approval_rate:.3f}  TPR={g.true_positive_rate:.3f}")
+            print(
+                f"    gruppo {g.group}: n={g.n:4d}  approval_rate={g.approval_rate:.3f}  "
+                f"TPR={g.true_positive_rate:.3f}"
+            )
         print(f"    demographic_parity_difference = {report.demographic_parity_difference:.4f}")
         print(f"    equal_opportunity_difference  = {report.equal_opportunity_difference:.4f}")
 
